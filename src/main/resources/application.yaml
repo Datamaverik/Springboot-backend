@@ -7,3 +7,5 @@ stripe:
   timeout: 1000
   supported-currencies: USD,EUR,RUP
 payment-gateway: paypal
+repository-capacity: 5
+port: 4000

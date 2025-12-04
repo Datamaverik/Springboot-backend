@@ -9,10 +9,10 @@ public class StoreApplication {
     //  entry point of the application like index.js
 	public static void main(String[] args) {
 		ApplicationContext context =  SpringApplication.run(StoreApplication.class, args);
-        var orderService = context.getBean(OrderService.class);
-        orderService.placeOrder();
+//        var orderService = context.getBean(OrderService.class);
+//        orderService.placeOrder();
 
-        var notificationManager = context.getBean(NotificationManager.class);
-        notificationManager.sendNotification("Your order has been placed!");
+        var userService = context.getBean(UserService.class);
+        userService.registerUser(new User("Shreyash Verma", "ex@ex.com", "cow"));
 	}
 }

@@ -9,6 +9,12 @@ public class AppConfig {
     @Value("${payment-gateway:stripe}")
     private String paymentGateway;
 
+    @Value("${repository-capacity:50}")
+    private int capacity;
+
+    @Value("${port:4000}")
+    private int port;
+
     @Bean
     public PaymentService stripe() {
         return new StripePaymentService();
@@ -27,17 +33,16 @@ public class AppConfig {
     }
 
     @Bean
-    public EmailService email() {
-        return new EmailService();
+    public UserRepository userRepository() {
+        return new InMemoryUserRepository(capacity);
+    }
+
+    public NotificationService notificationService() {
+        return new EmailNotificationService(port);
     }
 
     @Bean
-    public SMSService sms() {
-        return new SMSService();
-    }
-
-    @Bean
-    public NotificationManager notificationManager() {
-        return new NotificationManager(email());
+    public UserService userService() {
+        return new UserService(userRepository(), notificationService());
     }
 }
