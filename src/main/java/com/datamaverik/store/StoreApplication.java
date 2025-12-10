@@ -1,9 +1,6 @@
 package com.datamaverik.store;
 
-import com.datamaverik.store.entities.Address;
-import com.datamaverik.store.entities.Profile;
-import com.datamaverik.store.entities.Tag;
-import com.datamaverik.store.entities.User;
+import com.datamaverik.store.entities.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -19,13 +16,14 @@ public class StoreApplication {
                 .email("email")
                 .build();
 
-        var profile = Profile.builder()
-                .bio("bio")
+        var category = new Category("electronics");
+        var product = Product.builder()
+                .name("PS5")
+                .price(55000.00F)
                 .build();
 
-        user.setProfile(profile);
-        profile.setUser(user);
+        category.addProduct(product);
 
-        System.out.println(user);
+        System.out.println(category);
 	}
 }
