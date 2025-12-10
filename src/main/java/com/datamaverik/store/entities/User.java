@@ -22,7 +22,7 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nam")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "email")
@@ -51,7 +51,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
@@ -68,4 +67,23 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Profile profile;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> wishList = new HashSet<>();
+
+    public void addProductToWishlist(Product product) {
+        wishList.add(product);
+        product.getUsers().add(this);
+    }
+
+    public void removeProductFromWishlist(Product product) {
+        wishList.remove(product);
+        product.getUsers().remove(this);
+    }
 }

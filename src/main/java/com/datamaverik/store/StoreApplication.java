@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.math.BigDecimal;
+
 @SpringBootApplication
 public class StoreApplication {
     //  entry point of the application like index.js
@@ -16,14 +18,14 @@ public class StoreApplication {
                 .email("email")
                 .build();
 
-        var category = new Category("electronics");
         var product = Product.builder()
                 .name("PS5")
-                .price(55000.00F)
+                .description("description")
+                .price(BigDecimal.valueOf(65000.00))
                 .build();
 
-        category.addProduct(product);
+        user.addProductToWishlist(product);
 
-        System.out.println(category);
+        System.out.println(user);
 	}
 }
