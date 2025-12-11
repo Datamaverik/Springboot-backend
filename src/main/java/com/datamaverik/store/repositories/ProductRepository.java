@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -48,8 +49,8 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
 
     //  Find products whose prices are in a given range and sort by name
     //  SQL or JPQL
-    @Query(value = "select * from products p where p.price between :min and :max order by p.name", nativeQuery = true)
-    List<Product> findProducts(@Param("min") BigDecimal min, @Param("max") BigDecimal max);
+    @Procedure("findProductsByPrice")
+    List<Product> findProducts(BigDecimal min, BigDecimal max);
 
     @Query("select count(*) from Product p where p.price between :min and :max")
     long countProducts(@Param("min") BigDecimal min, @Param("max") BigDecimal max);

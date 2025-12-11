@@ -69,8 +69,20 @@ public class UserService {
         productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte)1);
     }
 
+    @Transactional
     public void fetchProducts() {
-        var products = productRepository.findByCategory(new Category((byte)1, "name"));
-        products.forEach(System.out::println);
+        var products = productRepository.findProducts(BigDecimal.valueOf(1), BigDecimal.valueOf(10000));
+        products.forEach(product -> {
+            System.out.println(product.getName() + " " + product.getDescription());
+        });
+    }
+
+    @Transactional
+    public void fetchUser() {
+        var users = userRepository.findAllWithAddresses();
+        users.forEach(u -> {
+            System.out.println(u);
+            u.getAddresses().forEach(System.out::println);
+        });
     }
 }
