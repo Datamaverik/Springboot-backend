@@ -27,6 +27,15 @@ public class Category {
         this.name = name;
     }
 
+    public Category(byte id) {
+        this.id = id;
+    }
+
+    public Category(byte id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public void addProduct(Product product) {
         products.add(product);
         product.setCategory(this);

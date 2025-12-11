@@ -1,6 +1,7 @@
 package com.datamaverik.store.services;
 
 import com.datamaverik.store.entities.Address;
+import com.datamaverik.store.entities.Category;
 import com.datamaverik.store.entities.User;
 import com.datamaverik.store.repositories.AddressRepository;
 import com.datamaverik.store.repositories.ProductRepository;
@@ -10,6 +11,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Service
@@ -59,5 +62,15 @@ public class UserService {
         var user = userRepository.findById(2L).orElseThrow();
         productRepository.findAll().forEach(user::addProductToWishlist);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateProductPrices() {
+        productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte)1);
+    }
+
+    public void fetchProducts() {
+        var products = productRepository.findByCategory(new Category((byte)1, "name"));
+        products.forEach(System.out::println);
     }
 }
