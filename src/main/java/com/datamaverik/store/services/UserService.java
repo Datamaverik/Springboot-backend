@@ -1,7 +1,6 @@
 package com.datamaverik.store.services;
 
 import com.datamaverik.store.entities.Address;
-import com.datamaverik.store.entities.Category;
 import com.datamaverik.store.entities.User;
 import com.datamaverik.store.repositories.AddressRepository;
 import com.datamaverik.store.repositories.ProductRepository;
@@ -88,8 +87,8 @@ public class UserService {
 
     @Transactional
     public void findProfiles() {
-        var profiles = profileRepository.findProfilesByLoyaltyPoints(2);
-        profiles.forEach(p -> {
+        var users = userRepository.findLoyalUsers(2);
+        users.forEach(p -> {
             System.out.println(p.getId() + " " + p.getEmail());
         });
     }
