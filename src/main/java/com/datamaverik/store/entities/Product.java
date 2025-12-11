@@ -32,13 +32,7 @@ public class Product {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @ManyToMany(mappedBy = "wishList")
-    @Builder.Default
-    @ToString.Exclude
-    private Set<User> users = new HashSet<>();
-
 }

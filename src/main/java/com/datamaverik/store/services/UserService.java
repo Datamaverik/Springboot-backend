@@ -3,6 +3,7 @@ package com.datamaverik.store.services;
 import com.datamaverik.store.entities.Address;
 import com.datamaverik.store.entities.User;
 import com.datamaverik.store.repositories.AddressRepository;
+import com.datamaverik.store.repositories.ProductRepository;
 import com.datamaverik.store.repositories.ProfileRepository;
 import com.datamaverik.store.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
@@ -16,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final AddressRepository addressRepository;
+    private final ProductRepository productRepository;
     private final EntityManager entityManager;
 
     @Transactional
@@ -45,6 +47,17 @@ public class UserService {
 
         user.addAddress(address);
 
+        userRepository.save(user);
+    }
+
+    public void deleteRelated() {
+        userRepository.deleteById(1L);
+    }
+
+    @Transactional
+    public void addProductsToWishlist() {
+        var user = userRepository.findById(2L).orElseThrow();
+        productRepository.findAll().forEach(user::addProductToWishlist);
         userRepository.save(user);
     }
 }

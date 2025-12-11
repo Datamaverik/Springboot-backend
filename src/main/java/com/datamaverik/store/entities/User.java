@@ -31,7 +31,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @Builder.Default
     private List<Address> addresses = new ArrayList<>();
 
@@ -65,8 +65,8 @@ public class User {
         tag.getUsers().remove(this);
     }
 
-//    @OneToOne(mappedBy = "user")
-//    private Profile profile;
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Profile profile;
 
     @Builder.Default
     @ManyToMany
@@ -79,11 +79,9 @@ public class User {
 
     public void addProductToWishlist(Product product) {
         wishList.add(product);
-        product.getUsers().add(this);
     }
 
     public void removeProductFromWishlist(Product product) {
         wishList.remove(product);
-        product.getUsers().remove(this);
     }
 }
