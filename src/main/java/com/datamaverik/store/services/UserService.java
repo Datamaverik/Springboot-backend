@@ -85,4 +85,12 @@ public class UserService {
             u.getAddresses().forEach(System.out::println);
         });
     }
+
+    @Transactional
+    public void findProfiles() {
+        var profiles = profileRepository.findProfilesByLoyaltyPoints(2);
+        profiles.forEach(p -> {
+            System.out.println(p.getId() + " " + p.getEmail());
+        });
+    }
 }

@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "profiles")
 public class Profile {
     @Id
@@ -35,4 +34,14 @@ public class Profile {
     @JoinColumn(name = "id")
     @MapsId
     private User user;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "bio = " + bio + ", " +
+                "phoneNumber = " + phoneNumber + ", " +
+                "loyaltyPoints = " + loyaltyPoints + ", " +
+                "dateOfBirth = " + dateOfBirth + ")";
+    }
 }
