@@ -92,4 +92,10 @@ public class UserService {
             System.out.println(p.getId() + " " + p.getEmail());
         });
     }
+
+    @Transactional
+    public void fetchProductsByCriteria() {
+        var products = productRepository.findProductsByCriteria(null, BigDecimal.valueOf(1), BigDecimal.valueOf(10000));
+        products.forEach(System.out::println);
+    }
 }

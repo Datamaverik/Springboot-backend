@@ -15,7 +15,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface ProductRepository extends CrudRepository<Product, Integer> {
+public interface ProductRepository extends CrudRepository<Product, Integer>, ProductCriteriaRepository {
     //  String
     List<Product> findByName(String name);
     List<Product> findByNameLike(String name);
