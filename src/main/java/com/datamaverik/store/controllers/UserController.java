@@ -2,6 +2,7 @@ package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.UserDto;
 import com.datamaverik.store.entities.User;
+import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user ->
-                    new UserDto(user.getId(), user.getName(), user.getEmail())
-                )
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -34,6 +34,6 @@ public class UserController {
         if(user == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new UserDto(user.getId(), user.getName(), user.getEmail()));
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }
