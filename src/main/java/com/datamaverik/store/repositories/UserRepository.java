@@ -1,6 +1,5 @@
 package com.datamaverik.store.repositories;
 
-import com.datamaverik.store.dtos.ProfilesDTO;
 import com.datamaverik.store.entities.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +17,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("select u from User u")
     List<User> findAllWithAddresses();
 
-    @Query("select u.id as id, u.email as email from User u where u.profile.loyaltyPoints > :minPoints order by u.email")
-    List<ProfilesDTO> findLoyalUsers(@Param("minPoints") int minPoints);
+//    @Query("select u.id as id, u.email as email from User u where u.profile.loyaltyPoints > :minPoints order by u.email")
+//    List<ProfilesDTO> findLoyalUsers(@Param("minPoints") int minPoints);
 }

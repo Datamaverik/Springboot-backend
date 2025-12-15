@@ -1,11 +1,10 @@
 package com.datamaverik.store.repositories;
 
-import com.datamaverik.store.dtos.ProductSummary;
-import com.datamaverik.store.dtos.ProductSummaryDTO;
 import com.datamaverik.store.entities.Category;
 import com.datamaverik.store.entities.Product;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Limit;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -15,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface ProductRepository extends CrudRepository<Product, Integer>, ProductCriteriaRepository {
+public interface ProductRepository extends CrudRepository<Product, Integer>{
     //  String
     List<Product> findByName(String name);
     List<Product> findByNameLike(String name);
@@ -59,6 +58,6 @@ public interface ProductRepository extends CrudRepository<Product, Integer>, Pro
     @Query("update Product p set p.price = :newPrice where p.category.id = :categoryId")
     void updatePriceByCategory(@Param("newPrice") BigDecimal newPrice, @Param("categoryId") Byte categoryId);
 
-    @Query("select p.id, p.name from Product p where p.category = :category")
-    List<ProductSummary> findByCategory(@Param("category") Category category);
+//    @Query("select p.id, p.name from Product p where p.category = :category")
+//    List<ProductSummary> findByCategory(@Param("category") Category category);
 }
