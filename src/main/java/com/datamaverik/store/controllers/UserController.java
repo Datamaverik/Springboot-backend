@@ -1,7 +1,6 @@
 package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.UserDto;
-import com.datamaverik.store.entities.User;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
