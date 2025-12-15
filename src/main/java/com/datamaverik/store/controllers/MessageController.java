@@ -1,6 +1,6 @@
 package com.datamaverik.store.controllers;
 
-import com.datamaverik.store.entities.Message;
+import com.datamaverik.store.repositories.Message;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
