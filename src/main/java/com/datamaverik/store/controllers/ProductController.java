@@ -19,11 +19,10 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> getAllProducts(
-            @RequestParam(required = false, defaultValue = "0", name = "categoryId")
-            Long categoryId
+            @RequestParam(required = false, defaultValue = "", name = "categoryId")
+            Byte categoryId
     ) {
-        System.out.println(categoryId);
-        if(!Set.of(1L, 2L, 3L).contains(categoryId))
+        if(categoryId == null)
             return productRepository.findAll()
                     .stream().map(productMapper::toDto)
                     .toList();

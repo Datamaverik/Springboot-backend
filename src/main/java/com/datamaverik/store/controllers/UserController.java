@@ -1,5 +1,6 @@
 package com.datamaverik.store.controllers;
 
+import com.datamaverik.store.dtos.RegisterUserRequest;
 import com.datamaverik.store.dtos.UserDto;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -22,7 +24,7 @@ public class UserController {
     public List<UserDto> getAllUsers(
             @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy
             ) {
-        if(!Set.of("name", "email").contains(sortBy))
+        if(!Set.of("id", "name", "email").contains(sortBy))
             sortBy = "name";
 
         return userRepository.findAll(Sort.by(sortBy))
@@ -38,5 +40,18 @@ public class UserController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder) {
+        var user = userMapper.toEntity(request);
+        userRepository.save(user);
+
+        var userDto = userMapper.toDto(user);
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(userDto);
     }
 }
