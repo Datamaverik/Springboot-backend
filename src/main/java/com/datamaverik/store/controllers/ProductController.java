@@ -1,11 +1,13 @@
 package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.ProductDto;
+import com.datamaverik.store.dtos.RegisterProductRequest;
 import com.datamaverik.store.mappers.ProductMapper;
 import com.datamaverik.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -40,5 +42,19 @@ public class ProductController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(productMapper.toDto(product));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(
+            @RequestBody RegisterProductRequest request,
+            UriComponentsBuilder uriBuilder
+    ) {
+        var product = productMapper.toEntity(request);
+        productRepository.save(product);
+
+        var productDto = productMapper.toDto(product);
+        var uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(productDto);
     }
 }
