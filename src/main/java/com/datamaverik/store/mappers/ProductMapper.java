@@ -2,9 +2,11 @@ package com.datamaverik.store.mappers;
 
 import com.datamaverik.store.dtos.ProductDto;
 import com.datamaverik.store.dtos.RegisterProductRequest;
+import com.datamaverik.store.dtos.UpdateProductRequest;
 import com.datamaverik.store.entities.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
@@ -12,4 +14,6 @@ public interface ProductMapper {
     ProductDto toDto(Product product);
 
     Product toEntity(RegisterProductRequest request);
+
+    void update(UpdateProductRequest request, @MappingTarget Product product);
 }

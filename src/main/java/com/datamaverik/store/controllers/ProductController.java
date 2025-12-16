@@ -65,8 +65,18 @@ public class ProductController {
         return ResponseEntity.created(uri).body(productDto);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ProductDto> updateProduct(
-//            @RequestBody UpdateProductRequest request
-//    )
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateProductRequest request
+    ) {
+        var product = productRepository.findById(id).orElse(null);
+        if(product == null)
+            return ResponseEntity.notFound().build();
+
+        productMapper.update(request, product);
+        productRepository.save(product);
+
+        return ResponseEntity.ok(productMapper.toDto(product));
+    }
 }
