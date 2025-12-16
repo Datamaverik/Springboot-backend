@@ -1,10 +1,12 @@
 package com.datamaverik.store.mappers;
 
 import com.datamaverik.store.dtos.RegisterUserRequest;
+import com.datamaverik.store.dtos.UpdateUserRequest;
 import com.datamaverik.store.dtos.UserDto;
 import com.datamaverik.store.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -12,4 +14,6 @@ public interface UserMapper {
     UserDto toDto(User user);
 
     User toEntity(RegisterUserRequest request);
+
+    void update(UpdateUserRequest request, @MappingTarget User user);
 }
