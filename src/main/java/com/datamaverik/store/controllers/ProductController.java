@@ -2,7 +2,6 @@ package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.ProductDto;
 import com.datamaverik.store.dtos.RegisterProductRequest;
-import com.datamaverik.store.dtos.UpdateProductRequest;
 import com.datamaverik.store.mappers.ProductMapper;
 import com.datamaverik.store.repositories.CategoryRepository;
 import com.datamaverik.store.repositories.ProductRepository;
@@ -48,36 +47,42 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createProduct(
-            @RequestBody RegisterProductRequest request,
+    public ResponseEntity<ProductDto> createProduct(
+            @RequestBody ProductDto request,
             UriComponentsBuilder uriBuilder
     ) {
         var product = productMapper.toEntity(request);
         var category = categoryRepository.findById(request.getCategoryId()).orElse(null);
         if(category == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("invalid category");
+            return ResponseEntity.badRequest().build();
 
         product.setCategory(category);
         productRepository.save(product);
-        var productDto = productMapper.toDto(product);
-        var uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+        var uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
+        request.setId(product.getId());
 
-        return ResponseEntity.created(uri).body(productDto);
+        return ResponseEntity.created(uri).body(request);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable(name = "id") Long id,
-            @RequestBody UpdateProductRequest request
+            @RequestBody ProductDto request
     ) {
         var product = productRepository.findById(id).orElse(null);
         if(product == null)
             return ResponseEntity.notFound().build();
 
-        productMapper.update(request, product);
-        productRepository.save(product);
+        var category = categoryRepository.findById(request.getCategoryId()).orElse(null);
+        if(category == null)
+            return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok(productMapper.toDto(product));
+        productMapper.update(request, product);
+        product.setCategory(category);
+        productRepository.save(product);
+        request.setId(product.getId());
+
+        return ResponseEntity.ok(request);
     }
 
     @DeleteMapping("/{id}")
