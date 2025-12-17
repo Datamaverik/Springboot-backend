@@ -2,7 +2,6 @@ package com.datamaverik.store.services;
 
 import com.datamaverik.store.dtos.CartDto;
 import com.datamaverik.store.dtos.CartItemDto;
-import com.datamaverik.store.dtos.UpdateCartItemRequest;
 import com.datamaverik.store.entities.Cart;
 import com.datamaverik.store.exceptions.CartNotFoundException;
 import com.datamaverik.store.exceptions.ProductNotFoundException;
@@ -10,13 +9,8 @@ import com.datamaverik.store.mappers.CartMapper;
 import com.datamaverik.store.repositories.CartRepository;
 import com.datamaverik.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
-import org.antlr.v4.runtime.misc.LogManager;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -60,7 +54,7 @@ public class CartService {
     public CartItemDto updateItem(
             UUID cartId,
             Long productId,
-            UpdateCartItemRequest request) {
+            Integer quantity) {
         var cart = cartRepository.findById(cartId).orElse(null);
         if(cart == null)
             throw new CartNotFoundException();
@@ -69,7 +63,7 @@ public class CartService {
         if(cartItem == null)
             throw new ProductNotFoundException();
 
-        cartItem.setQuantity(request.getQuantity());
+        cartItem.setQuantity(quantity);
         cartRepository.save(cart);
 
         return cartMapper.toDto(cartItem);
