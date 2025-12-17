@@ -1,12 +1,10 @@
 package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.ProductDto;
-import com.datamaverik.store.dtos.RegisterProductRequest;
 import com.datamaverik.store.mappers.ProductMapper;
 import com.datamaverik.store.repositories.CategoryRepository;
 import com.datamaverik.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
