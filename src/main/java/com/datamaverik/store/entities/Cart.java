@@ -64,4 +64,9 @@ public class Cart {
             items.remove(cartItem);
         }
     }
+
+    public void clearItems() {
+        items.stream().forEach(cartItem -> cartItem.setCart(null));
+        items.clear();
+    }
 }
