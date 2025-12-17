@@ -1,4 +1,4 @@
-package com.datamaverik.store.controllers;
+package com.datamaverik.store.repositories;
 
 import com.datamaverik.store.dtos.CartItemDto;
 import com.datamaverik.store.entities.CartItem;
