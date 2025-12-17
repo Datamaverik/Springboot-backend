@@ -5,7 +5,6 @@ import com.datamaverik.store.dtos.CartDto;
 import com.datamaverik.store.dtos.CartItemDto;
 import com.datamaverik.store.dtos.UpdateCartItemRequest;
 import com.datamaverik.store.entities.Cart;
-import com.datamaverik.store.entities.CartItem;
 import com.datamaverik.store.mappers.CartMapper;
 import com.datamaverik.store.repositories.CartRepository;
 import com.datamaverik.store.repositories.ProductRepository;
@@ -95,5 +94,22 @@ public class CartController {
         cartRepository.save(cart);
 
         return ResponseEntity.ok(cartMapper.toDto(cartItem));
+    }
+
+    @DeleteMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<?> removeItem(
+            @PathVariable UUID cartId,
+            @PathVariable Long productId
+    ) {
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if(cart == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("error", "Cart not found")
+            );
+
+        cart.removeItem(productId);
+        cartRepository.save(cart);
+
+        return ResponseEntity.noContent().build();
     }
 }
