@@ -1,6 +1,5 @@
 package com.datamaverik.store.mappers;
 
-import com.datamaverik.store.dtos.ChangePasswordRequest;
 import com.datamaverik.store.dtos.RegisterUserRequest;
 import com.datamaverik.store.dtos.UpdateUserRequest;
 import com.datamaverik.store.dtos.UserDto;

@@ -3,17 +3,20 @@ package com.datamaverik.store.controllers;
 import com.datamaverik.store.dtos.AddItemToCartRequest;
 import com.datamaverik.store.dtos.CartDto;
 import com.datamaverik.store.dtos.CartItemDto;
+import com.datamaverik.store.dtos.UpdateCartItemRequest;
 import com.datamaverik.store.entities.Cart;
 import com.datamaverik.store.entities.CartItem;
 import com.datamaverik.store.mappers.CartMapper;
 import com.datamaverik.store.repositories.CartRepository;
 import com.datamaverik.store.repositories.ProductRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -80,5 +83,32 @@ public class CartController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(cartMapper.toDto(cart));
+    }
+
+    @PutMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<?> updateItem(
+            @PathVariable UUID cartId,
+            @PathVariable Long productId,
+            @Valid @RequestBody UpdateCartItemRequest request
+    ) {
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if(cart == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("error", "Cart not found")
+            );
+
+        var cartItem = cart.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+        if(cartItem == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("error", "Product not found in the cart")
+            );
+
+        cartItem.setQuantity(request.getQuantity());
+        cartRepository.save(cart);
+
+        return ResponseEntity.ok(cartMapper.toDto(cartItem));
     }
 }
