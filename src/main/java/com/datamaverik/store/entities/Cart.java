@@ -3,6 +3,7 @@ package com.datamaverik.store.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,5 +33,26 @@ public class Cart {
             totalPrice = totalPrice.add(cartItem.getTotalPrice());
 
         return totalPrice;
+    }
+
+    public CartItem getItem(Long productId) {
+        return items.stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public CartItem addItem(Product product) {
+        var cartItem = getItem(product.getId());
+        if(cartItem != null)
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+        else {
+            cartItem = new CartItem();
+            cartItem.setProduct(product);
+            cartItem.setCart(this);
+            cartItem.setQuantity(1);
+            items.add(cartItem);
+        }
+        return  cartItem;
     }
 }
