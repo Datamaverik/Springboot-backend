@@ -1,22 +1,16 @@
 package com.datamaverik.store.controllers;
 
-import com.datamaverik.store.dtos.ChangePasswordRequest;
-import com.datamaverik.store.dtos.RegisterUserRequest;
-import com.datamaverik.store.dtos.UpdateUserRequest;
-import com.datamaverik.store.dtos.UserDto;
+import com.datamaverik.store.dtos.*;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -47,25 +41,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(userMapper.toDto(user));
-    }
-
-    @PostMapping
-    public ResponseEntity<?> registerUser(
-            @Valid @RequestBody RegisterUserRequest request,
-            UriComponentsBuilder uriBuilder) {
-        if(userRepository.existsByEmail(request.getEmail()))
-            return ResponseEntity.badRequest().body(
-                    Map.of("email", "Email already registered")
-            );
-
-        var user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-
-        var userDto = userMapper.toDto(user);
-        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(userDto);
     }
 
     @PutMapping("/{id}")
