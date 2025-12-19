@@ -9,3 +9,6 @@ spring:
     password: root
   jpa:
     show-sql: true
+  jwt:
+    secret: qSfeX1VAzAaWCy8tHgK5cPiND7UL8PCSZBRFoT/iZnVu2gYSUtL62kReMMPzU+8y0MjVznRmE+GlEUeE9Vww+w==
+    expiration-time: 86400
