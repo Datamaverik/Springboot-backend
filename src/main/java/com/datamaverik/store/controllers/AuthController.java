@@ -1,9 +1,11 @@
 package com.datamaverik.store.controllers;
 
+import com.datamaverik.store.dtos.JwtResponse;
 import com.datamaverik.store.dtos.LoginUserRequest;
 import com.datamaverik.store.dtos.RegisterUserRequest;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
+import com.datamaverik.store.services.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class AuthController {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(
@@ -48,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginUserRequest request) {
+    public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginUserRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -56,7 +59,9 @@ public class AuthController {
                 )
         );
 
-        return ResponseEntity.ok().build();
+        var token = jwtService.generateToken(request.getEmail());
+
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
