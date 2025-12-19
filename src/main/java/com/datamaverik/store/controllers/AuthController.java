@@ -5,6 +5,7 @@ import com.datamaverik.store.dtos.JwtResponse;
 import com.datamaverik.store.dtos.LoginUserRequest;
 import com.datamaverik.store.dtos.RegisterUserRequest;
 import com.datamaverik.store.dtos.UserDto;
+import com.datamaverik.store.entities.Role;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
 import com.datamaverik.store.services.JwtService;
@@ -44,10 +45,11 @@ public class AuthController {
             return ResponseEntity.badRequest().body(
                     Map.of("email", "Email already registered")
             );
-            }
+        }
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         var userDto = userMapper.toDto(user);
