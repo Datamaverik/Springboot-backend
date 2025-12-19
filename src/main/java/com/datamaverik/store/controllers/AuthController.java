@@ -1,5 +1,6 @@
 package com.datamaverik.store.controllers;
 
+import com.datamaverik.store.config.JwtConfig;
 import com.datamaverik.store.dtos.JwtResponse;
 import com.datamaverik.store.dtos.LoginUserRequest;
 import com.datamaverik.store.dtos.RegisterUserRequest;
@@ -32,6 +33,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(
@@ -73,7 +75,7 @@ public class AuthController {
         var cookie = new Cookie("refreshToken",  refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(604800);   //  7d
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());   //  7d
         cookie.setSecure(true);
         response.addCookie(cookie);
 
