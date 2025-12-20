@@ -1,6 +1,7 @@
 package com.datamaverik.store.services;
 
 import com.datamaverik.store.config.JwtConfig;
+import com.datamaverik.store.entities.Role;
 import com.datamaverik.store.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -56,5 +57,9 @@ public class JwtService {
 
     public Long getIdFromToken(String token) {
         return Long.parseLong(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token) {
+        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 }
