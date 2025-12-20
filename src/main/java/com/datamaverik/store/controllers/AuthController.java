@@ -8,6 +8,7 @@ import com.datamaverik.store.dtos.UserDto;
 import com.datamaverik.store.entities.Role;
 import com.datamaverik.store.mappers.UserMapper;
 import com.datamaverik.store.repositories.UserRepository;
+import com.datamaverik.store.services.AuthService;
 import com.datamaverik.store.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final JwtConfig jwtConfig;
+    private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(
@@ -101,10 +103,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var userId = (Long) authentication.getPrincipal();
-
-        var user = userRepository.findById(userId).orElse(null);
+        var user = authService.getCurrentUser();
         if(user == null) {
             return ResponseEntity.notFound().build();
         }
