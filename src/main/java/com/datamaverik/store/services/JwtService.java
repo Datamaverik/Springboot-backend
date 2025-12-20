@@ -1,7 +1,6 @@
 package com.datamaverik.store.services;
 
 import com.datamaverik.store.config.JwtConfig;
-import com.datamaverik.store.entities.Role;
 import com.datamaverik.store.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -16,35 +15,35 @@ import java.util.Date;
 public class JwtService {
     private final JwtConfig jwtConfig;
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public String generateRefreshToken(User user) {
+    public Jwt generateRefreshToken(User user) {
         return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
-    private String generateToken(User user, Integer tokenExpiration) {
-        return Jwts.builder()
-                .subject(user.getId().toString())
-                .claim("name", user.getName())
-                .claim("email", user.getEmail())
-                .claim("role", user.getRole())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
-                .signWith(jwtConfig.getSecretKey())
-                .compact();
+    public Jwt parseToken(String token) {
+        try {
+            var claims = getClaims(token);
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        }
+        catch (JwtException ex) {
+            return null;
+        }
     }
 
-    public boolean validateToken(String token) {
-        try{
-            var claims = getClaims(token);
+    private Jwt generateToken(User user, Integer tokenExpiration) {
+        var claims = Jwts.claims()
+                .subject(user.getId().toString())
+                .add("email", user.getEmail())
+                .add("name", user.getName())
+                .add("role", user.getRole())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
+                .build();
 
-            return claims.getExpiration().after(new Date());
-        }
-        catch (JwtException ex){
-            return false;
-        }
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 
     private Claims getClaims(String token) {
@@ -53,13 +52,5 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public Long getIdFromToken(String token) {
-        return Long.parseLong(getClaims(token).getSubject());
-    }
-
-    public Role getRoleFromToken(String token) {
-        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 }
