@@ -1,6 +1,7 @@
 package com.datamaverik.store.controllers;
 
 import com.datamaverik.store.dtos.CheckoutRequest;
+import com.datamaverik.store.dtos.ErrorDto;
 import com.datamaverik.store.dtos.OrderDto;
 import com.datamaverik.store.entities.Order;
 import com.datamaverik.store.entities.OrderItem;
@@ -41,7 +42,9 @@ public class CheckoutController {
     }
 
     @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCartNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Cart not found or Cart is empty"));
+    public ResponseEntity<ErrorDto> handleCartNotFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorDto("Cart not found or Cart is empty")
+        );
     }
 }

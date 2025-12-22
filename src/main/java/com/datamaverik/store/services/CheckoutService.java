@@ -8,10 +8,7 @@ import com.datamaverik.store.entities.OrderStatus;
 import com.datamaverik.store.exceptions.CartNotFoundException;
 import com.datamaverik.store.repositories.CartRepository;
 import com.datamaverik.store.repositories.UserRepository;
-import io.jsonwebtoken.impl.security.EdwardsCurve;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +22,7 @@ public class CheckoutService {
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private final AuthService authService;
+    private final CartService cartService;
 
     public OrderDto createOrder(UUID cartId) {
         var user = authService.getCurrentUser();
@@ -41,9 +39,8 @@ public class CheckoutService {
                 .status(OrderStatus.PENDING)
                 .customer(customer)
                 .totalPrice(cart.getTotalPrice())
+                .items(new LinkedHashSet<>())
                 .build();
-
-        var orderItems = new LinkedHashSet<OrderItem>();
 
         cart.getItems().forEach(cartItem -> {
             var product = cartItem.getProduct();
@@ -55,12 +52,11 @@ public class CheckoutService {
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
 
-            orderItems.add(orderItem);
+            order.getItems().add(orderItem);
         });
-        order.setItems(orderItems);
 
         orderRepository.save(order);
-        //  delete the cart when the payment is confirmed
+        cartService.clearCart(cartId);
 
         var orderDto = new OrderDto();
         orderDto.setOrderId(order.getId());
