@@ -28,4 +28,16 @@ public class OrderService {
 
         return orders.stream().map(orderMapper::toDto).toList();
     }
+
+    public GetOrderDto getOrderById(Long orderId) {
+        var user = authService.getCurrentUser();
+        if(user == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        var order = orderRepository.getOneById(orderId).orElse(null);
+        if(order == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return orderMapper.toDto(order);
+    }
 }
