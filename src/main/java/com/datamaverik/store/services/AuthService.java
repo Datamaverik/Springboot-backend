@@ -3,7 +3,6 @@ package com.datamaverik.store.services;
 import com.datamaverik.store.entities.User;
 import com.datamaverik.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

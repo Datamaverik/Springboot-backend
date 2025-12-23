@@ -1,6 +1,6 @@
 package com.datamaverik.store.services;
 
-import com.datamaverik.store.controllers.OrderRepository;
+import com.datamaverik.store.repositories.OrderRepository;
 import com.datamaverik.store.dtos.OrderDto;
 import com.datamaverik.store.entities.Order;
 import com.datamaverik.store.entities.OrderItem;
