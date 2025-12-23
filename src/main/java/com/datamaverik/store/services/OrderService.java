@@ -1,6 +1,7 @@
 package com.datamaverik.store.services;
 
 import com.datamaverik.store.dtos.GetOrderDto;
+import com.datamaverik.store.exceptions.OrderNotFoundException;
 import com.datamaverik.store.mappers.OrderMapper;
 import com.datamaverik.store.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class OrderService {
 
         var orders = orderRepository.getAllByCustomer(user).orElse(null);
         if(orders == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new OrderNotFoundException();
 
         return orders.stream().map(orderMapper::toDto).toList();
     }
@@ -35,8 +36,8 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
         var order = orderRepository.getOneById(orderId).orElse(null);
-        if(order == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if(order == null || !order.getCustomer().equals(user))
+            throw new OrderNotFoundException();
 
         return orderMapper.toDto(order);
     }
